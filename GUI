@@ -1,0 +1,271 @@
+from Tkinter import *
+import tkFont
+import dbactions
+import sqlite3
+import tkMessageBox
+
+
+
+
+class graphics:
+    def __init__(self, master):                      #the init function in Py which initiates all the variables defined in it
+        self.root = master
+        self.mainFrame = mainframe = Frame(self.root)    #so I have created a main window named root
+        self.mainFrame1 = mainframe = Frame(self.root)   #then created a frame mainframe in it
+        self.mainFrame2 = mainframe = Frame(self.root)   #and thn created different frame in mainframe
+        self.mainFrame3 = mainframe = Frame(self.root)
+        self.mainFrame4 = mainframe = Frame(self.root)
+        self.mainFrame5 = mainframe = Frame(self.root)
+        self.helv14 = tkFont.Font(family='Sans Serif', size=14)
+        self.helv36 = tkFont.Font(family='Sans Serif', size=18)
+        self.helv8 = tkFont.Font(family='Sans Serif', size=10)
+        self.mainp()                    #each function calls the next function and so the program keeps running
+
+
+    def mainp(self):
+        #mainp contains stuff for the main screen which have two buttons sign up and sign in. Each frame is configured manually.
+        #both of these functions which are connected to sign in and sign up button are called by a button down event and also send an argument
+        #the argument is like a unique virtual assignment of a function such as mainp is 0, signup is 1 and so on
+        #it helps when you want to go to a single frame from different frames and as each function creates its own frame if it has to show
+        #somrthing on screen but it doesnot know which previous frame to clear so by assigning a number to each function the
+        #program knows that if it's called by a function which has this number I have to clear this frame.
+
+        self.mainFrame.config(relief='sunken', width=1280, height=720, bg='black')
+        self.mainFrame.pack(expand='yes', fill='both')
+        self.inButton = Button(self.mainFrame, text = "Sign up", bd = 5, relief = GROOVE, bg = 'grey', font = self.helv36)
+        self.inButton.bind("<Button-1>", lambda event, arg = 0 : self.signup(event, arg))
+        self.inButton.place(bordermode = OUTSIDE, width =160, height = 40, x = 600, y = 300)
+        self.upButton = Button(self.mainFrame, text = "Sign in", bd = 5, relief = GROOVE,bg = 'grey', font = self.helv36)
+        self.upButton.bind("<Button-1>", lambda event, arg = 0 : self.signin(event, arg))
+        self.upButton.place(bordermode = OUTSIDE, width =160, height = 40, x = 600, y = 400)
+        self.mainFrame.pack_propagate(FALSE)
+        self.root.mainloop()          #keeps running the program over and over
+
+    def signup(self,event, i):
+
+        if (i == 0):                            #checks from which function is it called and which frame to clear
+            self.mainFrame.pack_forget()
+
+        self.mainFrame1.config(relief='sunken', width=1280, height=720, bg='black')
+        self.mainFrame1.pack(expand='yes', fill='both')
+        self.usr = Label(self.mainFrame1, text = "Username",bg = "grey", font = self.helv36)
+        self.usr.place(bordermode = OUTSIDE, width = 160, height = 30, x = 300, y = 200)
+        self.pas = Label(self.mainFrame1, text = "Password",bg = "grey", font = self.helv36)
+        self.pas.place(bordermode = OUTSIDE, width = 160, height = 30, x = 300, y = 300)
+        self.ran = Label(self.mainFrame1, text = "Rank", bg = "grey",font = self.helv36)
+        self.ran.place(bordermode = OUTSIDE, width = 160, height = 30, x = 300, y = 400)
+        self.data1 = Entry(self.mainFrame1)
+        self.data1.place(bordermode = OUTSIDE, width = 160, height = 30, x = 500, y = 200)
+        self.data2 = Entry(self.mainFrame1)
+        self.data2.place(bordermode = OUTSIDE, width = 160, height = 30, x = 500, y = 300)
+        self.data3 = Entry(self.mainFrame1)
+        self.data3.place(bordermode = OUTSIDE, width = 160, height = 30, x = 500, y = 400)
+
+        self.login = Button(self.mainFrame1, text = "Login", bg="grey", font = self.helv36)
+        self.login.place(bordermode = OUTSIDE, width = 160, height = 40, x = 0, y = 0)
+        self.login.bind("<Button-1>", lambda event, arg = 1 : self.signin(event, arg))
+
+        #The enter button is pressed and a text in entry field is extracted and sent to dbactions to put into databse with a query
+        self.submit = Button(self.mainFrame1, text = "Enter", font = self.helv36,  command = lambda: dbactions.databaseAddition().newusers(self.data1.get(),self.data2.get(),self.data3.get()))
+        self.submit.place(bordermode = OUTSIDE, width = 160, height = 40, x = 400, y = 500)
+
+
+
+
+        self.mainFrame1.pack_propagate(FALSE)
+        self.root.mainloop()
+
+    def signin(self,event, i):
+
+        if (i == 0):                         #checking which frame to clear
+            self.mainFrame.pack_forget()
+        elif(i == 1):
+            self.mainFrame1.pack_forget()
+        elif(i == 4):
+            self.mainFrame3.pack_forget()
+
+        self.mainFrame2.config(relief='sunken', width=1280, height=720, bg='black')
+        self.mainFrame2.pack(expand='yes', fill='both')
+
+        self.usrn = Label(self.mainFrame2, text="Username",bg = "grey", font=self.helv36)
+        self.usrn.place(bordermode=OUTSIDE, width=160, height=40, x=300, y=200)
+        self.pasd = Label(self.mainFrame2, text="Password",bg = "grey", font=self.helv36)
+        self.pasd.place(bordermode=OUTSIDE, width=160, height=40, x=300, y=300)
+        self.get1 = Entry(self.mainFrame2)
+        self.get1.place(bordermode = OUTSIDE, width = 160, height = 40, x = 500, y = 200)
+        self.get2 = Entry(self.mainFrame2)
+        self.get2.place(bordermode = OUTSIDE, width = 160, height = 40, x = 500, y = 300)
+
+
+        self.getIn = Button(self.mainFrame2, text = "Get In", font = self.helv36, command = lambda: self.facultyStudentCheck(self.get1.get(), self.get2.get()))
+        self.getIn.place(bordermode = OUTSIDE, width = 160, height = 40, x = 400, y = 400)
+
+        self.mainFrame2.pack_propagate(FALSE)
+        self.root.mainloop()
+
+
+    def facultyStudentCheck(self,chU,chP):        #checks whether its a student or a teacher and then logs in accordingly
+
+        if dbactions.databaseQuery().getUsers(chU,chP) == TRUE:
+            dat = dbactions.databaseQuery().facOrSt(chU, chP)
+            if dat == 'student':
+                self.student(3)
+            elif dat == 'faculty':
+                self.faculty(3)
+        else:
+            tkMessageBox.showinfo("Error", "Wrong username or password")  #if wrong password or username message box appears
+
+    def faculty(self, i):   #fields entered by the teacher are grabbed and sent to database and stored
+
+        if (i == 3):
+            self.mainFrame2.pack_forget()
+
+        self.mainFrame3.config(relief='sunken', width=1280, height=720, bg='black')
+        self.mainFrame3.pack(expand='yes', fill='both')
+
+        self.label1 = Label(self.mainFrame3, text = "Enter the question",bg = "grey", font = self.helv14)
+        self.label1.place(bordermode = OUTSIDE, width = 160, height = 40, x = 200, y = 100)
+
+        self.qGet = Entry(self.mainFrame3)
+        self.qGet.place(bordermode=OUTSIDE, width=360, height=40, x= 450, y=100)
+
+        self.opt1 = Label(self.mainFrame3, text = "Option 1",bg = "grey", font = self.helv14)
+        self.opt1.place(bordermode = OUTSIDE, width = 160, height = 40, x = 200, y = 150)
+
+        self.opt1Get = Entry(self.mainFrame3)
+        self.opt1Get.place(bordermode=OUTSIDE, width=360, height=40, x= 450, y=150)
+
+        self.opt2 = Label(self.mainFrame3, text = "Option 2",bg = "grey", font = self.helv14)
+        self.opt2.place(bordermode = OUTSIDE, width = 160, height = 40, x = 200, y = 200)
+
+        self.opt2Get = Entry(self.mainFrame3)
+        self.opt2Get.place(bordermode=OUTSIDE, width=360, height=40, x= 450, y=200)
+
+        self.opt3 = Label(self.mainFrame3, text = "Option 3",bg = "grey", font = self.helv14)
+        self.opt3.place(bordermode = OUTSIDE, width = 160, height = 40, x = 200, y = 250)
+
+        self.opt3Get = Entry(self.mainFrame3)
+        self.opt3Get.place(bordermode=OUTSIDE, width=360, height=40, x= 450, y=250)
+
+        self.opt4 = Label(self.mainFrame3, text = "Option 4",bg = "grey", font = self.helv14)
+        self.opt4.place(bordermode = OUTSIDE, width = 160, height = 40, x = 200, y = 300)
+
+        self.opt4Get = Entry(self.mainFrame3)
+        self.opt4Get.place(bordermode=OUTSIDE, width=360, height=40, x= 450, y=300)
+
+        self.typeOfQ = Label(self.mainFrame3, text = "Type",bg = "grey", font = self.helv14)
+        self.typeOfQ.place(bordermode = OUTSIDE, width = 160, height = 40, x = 200, y = 350)
+
+        self.typeGet = Entry(self.mainFrame3)
+        self.typeGet.place(bordermode=OUTSIDE, width=360, height=40, x= 450, y=350)
+
+        self.ansOfQ = Label(self.mainFrame3, text = "Answer",bg = "grey", font = self.helv14)
+        self.ansOfQ.place(bordermode = OUTSIDE, width = 160, height = 40, x = 200, y = 400)
+
+        self.note = Label(self.mainFrame3, text = "should be a,b,c,d for mcqs, a,b for T/F and digit for numerical", bg = "white", font = self.helv8)
+        self.note.place(bordermode = OUTSIDE, width = 350, height = 40, x = 830, y = 400)
+
+        self.ansGet = Entry(self.mainFrame3)
+        self.ansGet.place(bordermode=OUTSIDE, width=360, height=40, x= 450, y=400)
+
+        q, o1, o2, o3, o4, t, a = "", "", "", "", "", "", ""
+
+        self.newQSubmit = Button(self.mainFrame3, text = "Submit", font = self.helv36, command = lambda: self.submitQuestion(self.qGet.get(), self.opt1Get.get(), self.opt2Get.get(), self.opt3Get.get(), self.opt4Get.get(), self.typeGet.get(), self.ansGet.get()))
+        self.newQSubmit.place(bordermode = OUTSIDE, width = 160, height = 40, x = 550, y = 480)
+
+        self.logout = Button(self.mainFrame3, text = "LogOut", font = self.helv36)
+        self.logout.place(bordermode = OUTSIDE, width = 160, height = 40, x = 0, y = 0)
+        self.logout.bind("<Button-1>", lambda event, arg = 4 : self.signin(event, arg))
+
+        self.mainFrame3.pack_propagate(FALSE)
+        self.root.mainloop()
+
+    def submitQuestion(self, ques, op1, op2, op3, op4, typ, ans):
+
+        #query functions in dbactions is called
+        dbactions.databaseAddition().newquestions(ques,typ)
+        dbactions.databaseAddition().newanswers(ans, op1, op2, op3, op4)
+
+
+    def student(self,i):
+
+        if (i == 3):
+            self.mainFrame2.pack_forget()
+
+        self.mainFrame4.config(relief='sunken', width=1280, height=720, bg='black')
+        self.mainFrame4.pack(expand='yes', fill='both')
+
+
+        self.qwhy = 50
+
+
+        self.stq = [None]*10000      #stores questions and the options to show on screen
+        self.sta = [None]*1000       #stores the right answer from database
+        self.ans = [None]*1000       #stores user entered answers
+
+        data = dbactions.databaseQuery().showData()
+        for x in range(len(data)):
+            self.stq[x] = Label(self.mainFrame4, text = data[x][0],bg = "grey", font=self.helv8)
+            self.stq[x].place(bordermode=OUTSIDE, width=400, height=40, x=50, y=self.qwhy)
+
+            self.stq[x] = Label(self.mainFrame4, text = data[x][3],bg = "grey", font=self.helv8)
+            self.stq[x].place(bordermode=OUTSIDE, width=100, height=40, x=500, y=self.qwhy)
+
+            self.stq[x] = Label(self.mainFrame4, text = data[x][4], bg = "grey",font=self.helv8)
+            self.stq[x].place(bordermode=OUTSIDE, width=100, height=40, x=620, y=self.qwhy)
+
+            self.stq[x] = Label(self.mainFrame4, text = data[x][5], bg = "grey",font=self.helv8)
+            self.stq[x].place(bordermode=OUTSIDE, width=100, height=40, x=740, y=self.qwhy)
+
+            self.stq[x] = Label(self.mainFrame4, text = data[x][6], bg = "grey",font=self.helv8)
+            self.stq[x].place(bordermode=OUTSIDE, width=100, height=40, x=860, y=self.qwhy)
+
+
+            self.sta[x] = Entry(self.mainFrame4)
+            self.sta[x].place(bordermode=OUTSIDE, width=100, height=40, x= 980, y=self.qwhy)
+            self.qwhy = self.qwhy + 50
+
+        self.sumit = Button(self.mainFrame4, text = "Submit", font = self.helv14)
+        self.sumit.place(bordermode = OUTSIDE, width = 80, height = 40, x = 680, y = 650)
+        self.sumit.bind("<Button-1>", lambda event, arg = 4 : self.submitAns(event, arg))
+
+        self.mainFrame4.pack_propagate(FALSE)
+        self.root.mainloop()
+
+
+    def submitAns(self,event,i):
+        for d in range(len(self.sta)):
+            if(self.sta[d] != None):
+                self.ans[d] = self.sta[d].get()
+
+        self.checkKey = dbactions.databaseQuery().getAns()
+        self.coun = 0
+        for k in range(len(self.sta)):
+            if(self.ans[k] == None):
+                break
+
+            if(self.ans[k] == self.checkKey[k][0]):   #checks each answer one by one by comparilng with the answer in database
+                self.coun = self.coun + 1             #adds 1 to counter if answer matches
+        self.resultOut(5)
+
+
+    def resultOut(self, j):             #result is showed to the student
+        if (j == 5):
+            self.mainFrame4.pack_forget()
+
+
+        self.mainFrame5.config(relief='sunken', width=1280, height=720, bg='black')
+        self.mainFrame5.pack(expand='yes', fill='both')
+
+        self.obtNum = Label(self.mainFrame5, text = self.coun,bg = "grey", font=self.helv14)
+        self.obtNum.place(bordermode=OUTSIDE, width=100, height=40, x=670, y=300)
+
+        self.numText = Label(self.mainFrame5, text= "Obtained numbers are: ",bg = "grey", font=self.helv14)
+        self.numText.place(bordermode=OUTSIDE, width=250, height=40, x=400, y=300)
+
+        self.mainFrame4.pack_propagate(FALSE)
+        self.root.mainloop()
+
+
+root = Tk()
+a = graphics(root)
