@@ -1,0 +1,20 @@
+from unittest import TestCase
+from dbactions import databaseQuery
+#cant actually perform test on gui because all the functions are interlinked and the program does not terminate unless the user terminates it by clicking the cross button.
+
+class TestDatabaseQuery(TestCase):
+    def test_getUsers(self):
+        self.assertEqual(True,databaseQuery().getUsers("salar","salar"))
+
+    def test_facOrSt(self):
+        self.assertEqual("student", databaseQuery().facOrSt("salar","salar"))
+
+    def test_getAns(self):
+        self.assertEqual("salar", databaseQuery().getAns()[0][0])
+
+    def test_getAns2(self):
+        self.assertEqual("usama", databaseQuery().getAns()[1][0])
+
+    def test_data(self):
+        self.assertEqual("What my name", databaseQuery().showData()[0][0])
+
