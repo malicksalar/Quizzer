@@ -1,0 +1,75 @@
+import sqlite3
+
+
+class databaseAddition:
+
+    def __init__(self):
+        self.x = 'Hello'
+
+    def newquestions(self, q, t):
+        conn = sqlite3.connect("slice.db")    #connecting to db
+        c = conn.cursor()
+
+        c.execute("INSERT INTO questions(question, type) VALUES (?,?)", (q, t))   #to add new questions to db
+        conn.commit()
+
+    def newanswers(self, a, g1, g2, g3, g4):
+        conn = sqlite3.connect("slice.db")
+        c = conn.cursor()
+
+        c.execute("INSERT INTO answers(answer, ans1, ans2, ans3, ans4) VALUES (?, ?, ?, ?, ?)", (a, g1, g2, g3, g4))     #to add new answers to db
+        conn.commit()
+
+    def newusers(self, u, p, per):
+        conn = sqlite3.connect("slice.db")
+        c = conn.cursor()
+
+        c.execute("INSERT INTO user(username, password, person) VALUES (?, ?, ?)", (u, p, per))     #to add new answers to db
+        conn.commit()
+
+
+
+class databaseQuery:
+    def __init__(self):
+        self.y = 'Hello'
+
+
+    def getUsers(self,uname, pwd):
+        conn = sqlite3.connect("slice.db")
+        c = conn.cursor()
+        c.execute('SELECT * FROM user WHERE username = "%s" AND password = "%s"' % (uname,pwd))     #to add new answers to db
+        if c.fetchone() is not None:
+            return True
+        else:
+            return False
+
+    def facOrSt(self,uname, pwd):        #query to check whether Username and password is correct and if its a student or faculty
+        conn = sqlite3.connect("slice.db")
+        c = conn.cursor()
+
+        c.execute('SELECT person from user WHERE username = "%s" AND password = "%s"' % (uname,pwd))
+        data = c.fetchone()[0]
+        if data == 'student':
+            return 'student'
+        elif data == 'faculty':
+            return 'faculty'
+
+    def showData(self):              #to show questions to student fetches relevent fields
+        conn = sqlite3.connect("slice.db")
+        c = conn.cursor()
+
+        c.execute("SELECT questions.question, questions.type, answers.answer, answers.ans1, answers.ans2, answers.ans3, answers.ans4 from questions, answers WHERE questions.id = answers.id")
+        dat = c.fetchall()
+        return dat
+
+    def getAns(self):           #fecthes correct answers field to check the students answers
+        conn = sqlite3.connect("slice.db")
+        c = conn.cursor()
+
+        c.execute("SELECT answers.answer from answers")
+        an = c.fetchall()
+        return an
+
+
+
+
